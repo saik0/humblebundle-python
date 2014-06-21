@@ -15,6 +15,7 @@ setup(name='humblebundle',
       author='Joel Pedraza',
       author_email='joel@joelpedraza.com',
       url='https://github.com/saik0/humblebundle-python',
+      download_url='https://github.com/saik0/humblebundle-python/tarball/0.0.1',
       install_requires=['requests >= 2.0.0'],
       packages=['humblebundle'],
      )
