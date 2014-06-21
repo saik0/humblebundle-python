@@ -10,7 +10,7 @@ except ImportError:
     from distutils.core import setup
 
 setup(name='humblebundle',
-      version='0.1',
+      version='0.0.1',
       description='Humble Indie Bundle API client',
       author='Joel Pedraza',
       author_email='joel@joelpedraza.com',
