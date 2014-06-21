@@ -8,6 +8,7 @@ __author__ = "Joel Pedraza"
 __copyright__ = "Copyright 2014, Joel Pedraza"
 __license__ = "MIT"
 
+
 class BaseModel(object):
     def __init__(self, client, data):
         self._client = client
@@ -20,6 +21,7 @@ class BaseModel(object):
 
     def __iter__(self):
         return self.__dict__.__iter__()
+
 
 class Order(BaseModel):
     def __init__(self, client, data):

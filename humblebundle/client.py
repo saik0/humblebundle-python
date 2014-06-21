@@ -20,6 +20,7 @@ ORDER_URL = 'https://www.humblebundle.com/api/v1/order/{order_id}'
 CLAIMED_ENTITIES_URL = 'https://www.humblebundle.com/api/v1/user/claimed/entities'
 SIGNED_DOWNLOAD_URL = 'https://www.humblebundle.com/api/v1/user/Download/{machine_name}/sign'
 
+
 def callback(func):
     """
     A decorator to add a keyword arg 'callback' to execute a method on the return value of a function
@@ -218,7 +219,6 @@ class HumbleApi(object):
 
     # Internal helper methods
 
-    # TODO callback
     def _request(self, *args, **kwargs):
         """
         Set sane defaults that aren't session wide. Otherwise maintains the api of Session.request
