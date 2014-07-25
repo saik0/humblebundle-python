@@ -73,15 +73,10 @@ class Subscription(BaseModel):
 class Subproduct(BaseModel):
     def __init__(self, client, data):
         super(Subproduct, self).__init__(client, data)
-        self.tpkd_machine_names = [name for name in data['tpkd_machine_names']]
-        self.preorder = data['preorder']
         self.machine_name = data['machine_name']
-        self.parent = data['parent']
         self.payee = Payee(client, data['payee'])
         self.url = data['url']
         self.downloads = [Download(client, download) for download in data['downloads']]
-        self.visible = data['visible']
-        self.meta_data = data['meta_data']
         self.human_name = data['human_name']
         self.custom_download_page_box_html = data['custom_download_page_box_html']
         self.icon = data['icon']
@@ -104,7 +99,6 @@ class Download(BaseModel):
     def __init__(self, client, data):
         super(Download, self).__init__(client, data)
         self.machine_name = data['machine_name']
-        self.parent = data['parent']
         self.platform = data['platform']
         self.download_struct = [DownloadStruct(client, struct) for struct in data['download_struct']]
         self.options_dict = data['options_dict']
