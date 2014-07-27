@@ -21,5 +21,5 @@ for order in order_list:
     order.ensure_subproducts()
     # Print every game, ebook, audiobook, etc. for each order
     for subproduct in order.subproducts:
-        print(subproduct)
+        print(subproduct.machine_name)
 
