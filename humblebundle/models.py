@@ -36,13 +36,13 @@ class Order(BaseModel):
         self.leaderboard = data['leaderboard']
         self.owner_username = data['owner_username']
         self.platforms = [plat for plat, v in data['platform'].items() if v > 0]
-        self.subproducts = [Subproduct(client, prod) for prod in data.get('subproducts', [])]
+        self.subproducts = ([Subproduct(client, prod) for prod in data.get('subproducts', [])]) or None
 
     def __repr__(self):
         return "Order: <%s>" % self.product.machine_name
 
     def ensure_subproducts(self, *args, **kwargs):
-        if not hasattr(self, 'subproducts'):
+        if self.subproducts is None:
             self.__dict__.update(self._client.order(self.gamekey, *args, **kwargs).__dict__)
         return self
 
