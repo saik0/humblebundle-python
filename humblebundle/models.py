@@ -27,14 +27,16 @@ class Order(BaseModel):
     def __init__(self, client, data):
         super(Order, self).__init__(client, data)
         self.product = Product(client, data['product'])
-        self.subscriptions = [Subscription(client, sub) for sub in data['subscriptions']]
-        self.thankname = data['thankname']
-        self.claimed = data['claimed']
-        self.gamekey = data['gamekey']
-        self.country = data['country']
-        self.giftee = data['giftee']
-        self.leaderboard = data['leaderboard']
-        self.owner_username = data['owner_username']
+        subscriptions = data.get('subscriptions', [])
+        self.subscriptions = [Subscription(client, sub) for sub in subscriptions] if len(subscriptions) > 0 else None
+        self.thankname = data.get('thankname', None)
+        self.claimed = data.get('claimed', None)
+        self.gamekey = data.get('gamekey', None)
+        self.country = data.get('country', None)
+        self.giftee = data.get('giftee', None)
+        self.leaderboard = data.get('leaderboard', None)
+        self.owner_username = data.get('owner_username', None)
+        self.platform = data.get('platform', None)
         self.platforms = [plat for plat, v in data['platform'].items() if v > 0]
         self.subproducts = ([Subproduct(client, prod) for prod in data.get('subproducts', [])]) or None
 
@@ -50,7 +52,7 @@ class Order(BaseModel):
 class Product(BaseModel):
     def __init__(self, client, data):
         super(Product, self).__init__(client, data)
-        self.category = data['category']
+        self.category = data.get(1, None)
         self.human_name = data['human_name']
         self.machine_name = data['machine_name']
         self.supports_canonical = data['supports_canonical']
@@ -120,11 +122,11 @@ class DownloadStruct(BaseModel):
         self.message = data.get('message', None)
         self.url = Url(client, data.get('url', {}))
         self.external_link = data.get('external_link', None)
-        self.recommend_bittorrent = data['recommend_bittorrent']
-        self.human_size = data['human_size']
+        self.recommend_bittorrent = data.get('recommend_bittorrent', None)
+        self.human_size = data.get('human_size', None)
         self.file_size = data.get('file_size', None)
         self.md5 = data.get('md5', None)
-        self.fat32_warning = data['fat32_warning']
+        self.fat32_warning = data.get('fat32_warning', None)
         self.size = data.get('size', None)
         self.small = data.get('small', None)
 
