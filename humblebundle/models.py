@@ -37,7 +37,6 @@ class Order(BaseModel):
         self.leaderboard = data.get('leaderboard', None)
         self.owner_username = data.get('owner_username', None)
         self.platform = data.get('platform', None)
-        self.platforms = [plat for plat, v in data['platform'].items() if v > 0]
         self.subproducts = ([Subproduct(client, prod) for prod in data.get('subproducts', [])]) or None
 
     def __repr__(self):
