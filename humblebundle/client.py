@@ -111,6 +111,22 @@ class HumbleApi(object):
         response = self._request('POST', LOGIN_URL, *args, **kwargs)
         return handlers.login_handler(self, response)
 
+    @callback
+    def get_gamekeys(self, *args, **kwargs):
+        """
+        Fetch all the gamekeys owned by an account.
+
+        A gamekey is a string that uniquely identifies an order from the humble store.
+
+        :param list args: (optional) Extra positional args to pass to the request
+        :param dict kwargs: (optional) Extra keyword args to pass to the request
+        :return: A list of gamekeys
+        """
+        
+        self.logger.info("Downloading gamekeys")
+        response = self._request('GET', ORDER_LIST_URL, *args, **kwargs)
+        return handlers.gamekeys_handler(self, response)
+
     @deprecated
     @callback
     def order_list(self, *args, **kwargs):

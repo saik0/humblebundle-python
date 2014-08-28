@@ -89,6 +89,21 @@ def login_handler(client, response):
                                         captcha_required=captcha_required, authy_required=authy_required)
 
 
+def gamekeys_handler(client, response):
+    """ get_gamekeys response always returns JSON """
+
+    data = parse_data(response)
+
+    if isinstance(data, list):
+        return [v['gamekey'] for v in data]
+
+    # Let the helper function raise any common exceptions
+    authenticated_response_helper(response, data)
+
+    # We didn't get a list, or an error message
+    raise HumbleResponseException("Unexpected response body", request=response.request, response=response)
+
+
 def order_list_handler(client, response):
     """ order_list response always returns JSON """
 
