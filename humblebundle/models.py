@@ -22,6 +22,13 @@ class BaseModel(object):
     def __iter__(self):
         return self.__dict__.__iter__()
 
+class GameKey(BaseModel):
+    def __init__(self, client, data):
+        super(GameKey, self).__init__(client, data)
+        self.gamekey = data['gamekey']
+
+    def __repr__(self):
+        return "GameKey: <{gamekey}>".format(gamekey=self.gamekey)
 
 class Order(BaseModel):
     def __init__(self, client, data):
