@@ -42,11 +42,6 @@ class Order(BaseModel):
     def __repr__(self):
         return "Order: <%s>" % self.product.machine_name
 
-    def ensure_subproducts(self, *args, **kwargs):
-        if self.subproducts is None:
-            self.__dict__.update(self._client.order(self.gamekey, *args, **kwargs).__dict__)
-        return self
-
 
 class Product(BaseModel):
     def __init__(self, client, data):

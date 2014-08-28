@@ -121,33 +121,18 @@ class HumbleApi(object):
         :param list args: (optional) Extra positional args to pass to the request
         :param dict kwargs: (optional) Extra keyword args to pass to the request
         :return: A list of gamekeys
-        """
-        
-        self.logger.info("Downloading gamekeys")
-        response = self._request('GET', ORDER_LIST_URL, *args, **kwargs)
-        return handlers.gamekeys_handler(self, response)
-
-    @deprecated
-    @callback
-    def order_list(self, *args, **kwargs):
-        """
-        Download a list of all the :py:class:`Order`s made by a user, the orders do not have any :py:class:`Subproduct`s
-        Subproducts can be filled by calling :py:meth:`.Subproduct.ensure_subproducts`
-
-        :param list args: (optional) Extra positional args to pass to the request
-        :param dict kwargs: (optional) Extra keyword args to pass to the request
-        :return: A list of :py:class:`Order`s
         :rtype: list
         :raises RequestException: if the connection failed
         :raises HumbleAuthenticationException: if not logged in
         :raises HumbleResponseException: if the response was invalid
         """
-        self.logger.info("Downloading order list")
+
+        self.logger.info("Downloading gamekeys")
         response = self._request('GET', ORDER_LIST_URL, *args, **kwargs)
-        return handlers.order_list_handler(self, response)
+        return handlers.gamekeys_handler(self, response)
 
     @callback
-    def order(self, order_id, *args, **kwargs):
+    def get_order(self, order_id, *args, **kwargs):
         """
         Download an order by it's id
 
@@ -167,7 +152,7 @@ class HumbleApi(object):
 
     # TODO: model the claimed_entities response
     @callback
-    def claimed_entities(self, platform=None, *args, **kwargs):
+    def get_claimed_entities(self, platform=None, *args, **kwargs):
         """
         Download all the claimed entities for a user
 
@@ -249,6 +234,74 @@ class HumbleApi(object):
         self.store_default_params['request'] += 1  # may need to loop after a while
 
         return handlers.store_products_handler(self, response)
+
+    # Deprecated methods
+
+    @deprecated
+    def order_list(self, *args, **kwargs):
+        """
+        The api has changed and no longer returns a list of orders in one request. In order to maintain compatibility
+        with exiting clients this method will make many requests. It is recommended to iterate the results of
+        :py:func:`self.gamekeys` so exceptions can be handled per request.
+
+        Download a list of all the :py:class:`Order`s made by a user.
+
+        :param list args: (optional) Extra positional args to pass to the request
+        :param dict kwargs: (optional) Extra keyword args to pass to the request
+        :return: A list of :py:class:`Order`s
+        :rtype: list
+        :raises RequestException: if the connection failed
+        :raises HumbleAuthenticationException: if not logged in
+        :raises HumbleResponseException: if the response was invalid
+        """
+        self.logger.info("Downloading order list")
+        orders = []
+        gamekeys = self.get_gamekeys()
+
+        for gamekey in gamekeys:
+            orders.append(self.order(gamekey))
+
+        return orders
+
+    @deprecated
+    def order(self, order_id, *args, **kwargs):
+        """
+        This method is deprecated, it calls through to it's new name :py:func:`self.get_order`
+
+        Download an order by it's id
+
+        :param order_id: The identifier ("gamekey") that uniquely identifies the order
+        :param list args: (optional) Extra positional args to pass to the request
+        :param dict kwargs: (optional) Extra keyword args to pass to the request
+        :return: The :py:class:`Order` requested
+        :rtype: Order
+        :raises RequestException: if the connection failed
+        :raises HumbleAuthenticationException: if not logged in
+        :raises HumbleResponseException: if the response was invalid
+        """
+        return self.get_order(order_id, *args, **kwargs)
+
+    @deprecated
+    def get_claimed_entities(self, platform=None, *args, **kwargs):
+        """
+        Download all the claimed entities for a user
+
+        This call can take a long time for the server to start responding as it has to collect a lot of data about
+        the user's purchases.
+
+        This method does not parse the result into a subclass of BaseModel, but instead returns the decoded json.
+        I'm lazy and this just isn't very useful for the client this lib was written for.
+
+        :param platform:
+        :param list args: (optional) Extra positional args to pass to the request
+        :param dict kwargs: (optional) Extra keyword args to pass to the request
+        :return: The parsed json response
+        :rtype: dict
+        :raises RequestException: if the connection failed
+        :raises HumbleAuthenticationException: if not logged in
+        :raises HumbleResponseException: if the response was invalid
+        """
+        return self.get_claimed_entities(platform=platform, *args, **kwargs)
 
     # Internal helper methods
 
