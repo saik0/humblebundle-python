@@ -14,10 +14,10 @@ Basic usage looks something like::
     
     client.login("username@example.com", "secret")
     
-    order_list = client.order_list()
+    gamekeys = client.get_gamekeys()
     
-    for order in order_list:
-        order.ensure_subproducts()
+    for gamekey in gamekeys:
+        order = client.get_order(gamekey)
         for subproduct in order.subproducts:
             print(subproduct)
 
