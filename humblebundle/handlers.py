@@ -95,7 +95,7 @@ def order_list_handler(client, response):
     data = parse_data(response)
 
     if isinstance(data, list):
-        return [client.order(order['gamekey']) for order in data]
+        return [GameKey(client, order) for order in data]
 
     # Let the helper function raise any common exceptions
     authenticated_response_helper(response, data)
