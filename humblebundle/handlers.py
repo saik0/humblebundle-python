@@ -146,3 +146,9 @@ def sign_download_url_handler(client, response):
     # If the user isn't signed in we get a "typical" error response
     if authenticated_response_helper(response, data):
         return data['signed_url']
+        
+def store_products_handler(client, response):
+    """ Takes a results from the store as JSON and converts it to object """
+    
+    data = parse_data(response)
+    return [StoreProduct(client, result) for result in data['results']]
