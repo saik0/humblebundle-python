@@ -19,6 +19,7 @@ ORDER_LIST_URL = 'https://www.humblebundle.com/api/v1/user/order'
 ORDER_URL = 'https://www.humblebundle.com/api/v1/order/{order_id}'
 CLAIMED_ENTITIES_URL = 'https://www.humblebundle.com/api/v1/user/claimed/entities'
 SIGNED_DOWNLOAD_URL = 'https://www.humblebundle.com/api/v1/user/Download/{machine_name}/sign'
+STORE_URL = 'https://www.humblebundle.com/store/api/humblebundle'
 
 
 def callback(func):
@@ -62,6 +63,7 @@ class HumbleApi(object):
 
     default_headers = {'Accept': 'application/json', 'Accept-Charset': 'utf-8', 'Keep-Alive': 'true'}
     default_params = {'ajax': 'true'}
+    store_default_params = { "request": 1, "page_size": 20, "sort": "bestselling", "page": 0, "search": None }
 
     def __init__(self):
         self.logger = getLogger(__name__)
@@ -217,6 +219,36 @@ class HumbleApi(object):
         response = self._request('GET', url, *args, **kwargs)
         return handlers.sign_download_url_handler(self, response)
 
+    @callback
+    def search_store(self, search_query, *args, **kwargs):
+        """
+        Download a list of the results from the query.
+
+        :param search_query:
+        :param list args: (optional) Extra positional args to pass to the request
+        :param dict kwargs: (optional) Extra keyword args to pass to the request
+        :return: The results
+        :rtype: list
+        :raises RequestException: if the connection failed
+        :raises HumbleResponseException: if the response was invalid
+        """
+        self.logger.info("Searchingstore for url for {search_query}".format(search_query=search_query))
+        url = STORE_URL
+        
+        # setup query string parameters
+        params = self.store_default_params.copy()
+        params['search'] = search_query
+        
+        kwargs_params = kwargs.get('params', {}) if kwargs.get('params') else {} # make sure kwargs['params'] is a dict
+        
+        kwargs_params.update(params) # pull in any params in to kwargs
+        kwargs['params'] = kwargs_params
+        
+        response = self._request('GET', url, *args, **kwargs)
+        self.store_default_params['request'] += 1 # may need to loop after a while
+        
+        return handlers.store_products_handler(self, response)
+        
     # Internal helper methods
 
     def _request(self, *args, **kwargs):

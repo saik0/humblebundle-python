@@ -9,6 +9,9 @@ Usage
 Basic usage looks something like::
 
     client = humblebundle.HumbleApi()
+    
+    client.search_store("ftl")
+    
     client.login("username@example.com", "secret")
     
     order_list = client.order_list()

@@ -58,7 +58,18 @@ class Product(BaseModel):
 
     def __repr__(self):
         return "Product: <%s>" % self.machine_name
+        
+class StoreProduct(BaseModel):
+    def __init__(self, client, data):
+        super(StoreProduct, self).__init__(client, data)
+        self.category = data.get(1, None)
+        self.human_name = data['human_name']
+        self.machine_name = data['machine_name']
+        self.current_price = Price(client, data['current_price'])
+        self.full_price = Price(client, data['full_price'])
 
+    def __repr__(self):
+        return "StoreProduct: <%s>" % self.machine_name
 
 class Subscription(BaseModel):
     def __init__(self, client, data):
@@ -135,3 +146,24 @@ class Url(BaseModel):
         super(Url, self).__init__(client, data)
         self.web = data.get('web', None)
         self.bittorrent = data.get('bittorrent', None)
+
+class Price(BaseModel):
+    def __init__(self, client, data):
+        super(Price, self).__init__(client, data)
+        self.value = data[0]
+        self.currency = data[1]
+        
+    def __cmp__(self, other):
+        if other.currency == self.currency:
+            if self.value < other.value:
+                return -1
+            elif self.value > other.value:
+                return 1
+            else:
+                return 0
+        else:
+            raise NotImplemented("Mixed currencies cannot be compared")
+
+    def __repr__(self):
+        return "Price: <{value:.2f}{currency}>".format(value=self.value, currency=self.currency)
+
