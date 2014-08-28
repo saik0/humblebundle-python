@@ -58,7 +58,8 @@ class Product(BaseModel):
 
     def __repr__(self):
         return "Product: <%s>" % self.machine_name
-        
+
+
 class StoreProduct(BaseModel):
     def __init__(self, client, data):
         super(StoreProduct, self).__init__(client, data)
@@ -70,6 +71,7 @@ class StoreProduct(BaseModel):
 
     def __repr__(self):
         return "StoreProduct: <%s>" % self.machine_name
+
 
 class Subscription(BaseModel):
     def __init__(self, client, data):
@@ -147,6 +149,7 @@ class Url(BaseModel):
         self.web = data.get('web', None)
         self.bittorrent = data.get('bittorrent', None)
 
+
 class Price(BaseModel):
     def __init__(self, client, data):
         super(Price, self).__init__(client, data)
@@ -166,4 +169,3 @@ class Price(BaseModel):
 
     def __repr__(self):
         return "Price: <{value:.2f}{currency}>".format(value=self.value, currency=self.currency)
-
