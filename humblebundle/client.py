@@ -9,6 +9,7 @@ __license__ = "MIT"
 __all__ = ['HumbleApi', 'LOGIN_URL', 'ORDER_LIST_URL', 'CLAIMED_ENTITIES_URL', 'SIGNED_DOWNLOAD_URL', 'STORE_URL',
            'logger']
 
+from humblebundle.decorators import callback, deprecated
 from humblebundle.exceptions import *
 import humblebundle.handlers as handlers
 
@@ -21,24 +22,6 @@ ORDER_URL = 'https://www.humblebundle.com/api/v1/order/{order_id}'
 CLAIMED_ENTITIES_URL = 'https://www.humblebundle.com/api/v1/user/claimed/entities'
 SIGNED_DOWNLOAD_URL = 'https://www.humblebundle.com/api/v1/user/Download/{machine_name}/sign'
 STORE_URL = 'https://www.humblebundle.com/store/api/humblebundle'
-
-
-def callback(func):
-    """
-    A decorator to add a keyword arg 'callback' to execute a method on the return value of a function
-
-    Used to add callbacks to the API calls
-
-    :param func: The function to decorate
-    :return: The wrapped function
-    """
-    def wrap(*args, **kwargs):
-        callback_ = kwargs.pop('callback', None)
-        result = func(*args, **kwargs)
-        if callback_:
-            callback_(result)
-        return result
-    return wrap
 
 
 class HumbleApi(object):
@@ -85,9 +68,9 @@ class HumbleApi(object):
         * https://www.humblebundle.com/user/unclaimed_orders?ajax=true
         * https://www.humblebundle.com/bundle/claim?ajax=true
         * https://www.humblebundle.com/api/v1/model/(SubProduct|ModelPointer)
-          Lots of references to this base url in the claimed entities response, not sure what they are.
-
+            - Lots of references to /v1/model/* in the claimed entities response, not sure what they are.
     """
+
     @callback
     def login(self, username, password, authy_token=None, recaptcha_challenge=None, recaptcha_response=None,
               *args, **kwargs):
@@ -128,6 +111,7 @@ class HumbleApi(object):
         response = self._request('POST', LOGIN_URL, *args, **kwargs)
         return handlers.login_handler(self, response)
 
+    @deprecated
     @callback
     def order_list(self, *args, **kwargs):
         """
@@ -235,21 +219,21 @@ class HumbleApi(object):
         """
         self.logger.info("Searching store for url for {search_query}".format(search_query=search_query))
         url = STORE_URL
-        
+
         # setup query string parameters
         params = self.store_default_params.copy()
         params['search'] = search_query
-        
+
         kwargs_params = kwargs.get('params', {}) if kwargs.get('params') else {}  # make sure kwargs['params'] is a dict
-        
+
         kwargs_params.update(params)  # pull in any params in to kwargs
         kwargs['params'] = kwargs_params
-        
+
         response = self._request('GET', url, *args, **kwargs)
         self.store_default_params['request'] += 1  # may need to loop after a while
-        
+
         return handlers.store_products_handler(self, response)
-        
+
     # Internal helper methods
 
     def _request(self, *args, **kwargs):
