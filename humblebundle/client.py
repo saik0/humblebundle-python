@@ -9,12 +9,14 @@ __license__ = "MIT"
 __all__ = ['HumbleApi', 'LOGIN_URL', 'ORDER_LIST_URL', 'CLAIMED_ENTITIES_URL', 'SIGNED_DOWNLOAD_URL', 'STORE_URL',
            'logger']
 
+from logging import getLogger, NullHandler
+
+import requests
+
 from humblebundle.decorators import callback, deprecated
 from humblebundle.exceptions import *
 import humblebundle.handlers as handlers
 
-import requests
-from logging import getLogger, NullHandler
 
 LOGIN_URL = 'https://www.humblebundle.com/login'
 ORDER_LIST_URL = 'https://www.humblebundle.com/api/v1/user/order'

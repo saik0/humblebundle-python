@@ -25,6 +25,7 @@ class HumbleResponseException(RequestException, HumbleException):
     """
     A Request completed but the response was somehow invalid or unexpected
     """
+
     def __init__(self, *args, **kwargs):
         super(HumbleResponseException, self).__init__(*args, **kwargs)
 
@@ -33,6 +34,7 @@ class HumbleAuthenticationException(HumbleResponseException):
     """
     An unspecified authentication failure occurred
     """
+
     def __init__(self, *args, **kwargs):
         self.captcha_required = kwargs.pop('captcha_required', None)
         self.authy_required = kwargs.pop('authy_required', None)

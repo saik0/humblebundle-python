@@ -6,15 +6,15 @@ __author__ = "Joel Pedraza"
 __copyright__ = "Copyright 2014, Joel Pedraza"
 __license__ = "MIT"
 
+import itertools
+
+import requests
+
 from humblebundle.exceptions import *
 from humblebundle.models import *
 
-import itertools
-import requests
-
 
 # Helper methods
-
 
 def parse_data(response):
     try:
@@ -165,6 +165,6 @@ def sign_download_url_handler(client, response):
 
 def store_products_handler(client, response):
     """ Takes a results from the store as JSON and converts it to object """
-    
+
     data = parse_data(response)
     return [StoreProduct(client, result) for result in data['results']]

@@ -63,20 +63,19 @@ class StoreProduct(BaseModel):
         self.machine_name = data['machine_name']
         self.current_price = Price(client, data['current_price'])
         self.full_price = Price(client, data['full_price'])
-        self.icon = data['storefront_icon'] # URL as string
-        self.platforms = data['platforms'] #linux, windows, mac
-        self.delivery_methods = data['delivery_methods'] # download, steam, origin
-        self.description = data['description'] # HTML
+        self.icon = data['storefront_icon']  # URL as string
+        self.platforms = data['platforms']  # linux, windows, mac
+        self.delivery_methods = data['delivery_methods']  # download, steam, origin
+        self.description = data['description']  # HTML
         self.content_types = data['content_types']
-        self.youtube_id = data['youtube_link'] # ID of youtube video
+        self.youtube_id = data['youtube_link']  # ID of youtube video
         self.esrb_rating = data['esrb_rating']
         self.pegi_rating = data['pegi_rating']
-        self.developers = data['developers'] # dictionary
+        self.developers = data['developers']  # dictionary
         self.publishers = data['publishers']
         self.allowed_territories = data['allowed_territories']
         self.minimum_age = data['minimum_age']
-        self.system_requirements = data['system_requirements'] # HTML
-        
+        self.system_requirements = data['system_requirements']  # HTML
 
     def __repr__(self):
         return "StoreProduct: <%s>" % self.machine_name
@@ -164,7 +163,7 @@ class Price(BaseModel):
         super(Price, self).__init__(client, data)
         self.value = data[0]
         self.currency = data[1]
-        
+
     def __cmp__(self, other):
         if other.currency == self.currency:
             if self.value < other.value:
