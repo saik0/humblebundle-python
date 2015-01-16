@@ -45,7 +45,8 @@ class HumbleApi(object):
 
     """
 
-    default_headers = {'Accept': 'application/json', 'Accept-Charset': 'utf-8', 'Keep-Alive': 'true'}
+    default_headers = {'Accept': 'application/json', 'Accept-Charset': 'utf-8', 'Keep-Alive': 'true',
+                       'X-Requested-By': 'hb_android_app', 'User-Agent': 'Apache-HttpClient/UNAVAILABLE (java 1.4)'}
     default_params = {'ajax': 'true'}
     store_default_params = {"request": 1, "page_size": 20, "sort": "bestselling", "page": 0, "search": None}
 
