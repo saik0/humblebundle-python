@@ -10,12 +10,12 @@ except ImportError:
     from distutils.core import setup
 
 setup(name='humblebundle',
-      version='0.0.6',
+      version='0.1.1',
       description='Humble Indie Bundle API client',
       author='Joel Pedraza',
       author_email='joel@joelpedraza.com',
       url='https://github.com/saik0/humblebundle-python',
-      download_url='https://github.com/saik0/humblebundle-python/tarball/0.0.6',
+      download_url='https://github.com/saik0/humblebundle-python/tarball/0.1.1',
       install_requires=['requests >= 2.0.0'],
       packages=['humblebundle'],
       )
