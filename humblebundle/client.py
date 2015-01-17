@@ -18,6 +18,8 @@ from humblebundle.exceptions import *
 import humblebundle.handlers as handlers
 
 
+import re
+
 LOGIN_URL = 'https://www.humblebundle.com/login'
 ORDER_LIST_URL = 'https://www.humblebundle.com/api/v1/user/order'
 ORDER_URL = 'https://www.humblebundle.com/api/v1/order/{order_id}'
@@ -109,6 +111,21 @@ class HumbleApi(object):
             'authy-token': authy_token,
             'recaptcha_challenge_field': recaptcha_challenge,
             'recaptcha_response_field': recaptcha_response}
+
+        # We will need a valid csrf token
+
+        # Pull down the LOGIN_URL in a GET request and pull the csrf token
+        response = self._request('GET', LOGIN_URL, [], {})
+
+        matches = re.search(r'<input([^>]*?)name\s*=\s*["\']_le_csrf_token["\']([^>]*?)>', response.text)
+        if not matches is None:
+            # Parse the value from the input attribute to provide the token
+            value = "%s %s" % (matches.group(1), matches.group(2))
+            matches = re.search(r'value\s*=\s*["\'](.*?)["\']', value)
+
+        if not matches is None:
+            default_data["_le_csrf_token"] = matches.group(1)
+
         kwargs.setdefault('data', {}).update({k: v for k, v in default_data.items() if v is not None})
 
         response = self._request('POST', LOGIN_URL, *args, **kwargs)
