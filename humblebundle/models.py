@@ -49,7 +49,7 @@ class Product(BaseModel):
         self.category = data.get(1, None)
         self.human_name = data['human_name']
         self.machine_name = data['machine_name']
-        self.supports_canonical = data['supports_canonical']
+        self.supports_canonical = data.get('supports_canonical')
 
     def __repr__(self):
         return "Product: <%s>" % self.machine_name
