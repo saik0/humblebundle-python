@@ -91,7 +91,7 @@ def login_handler(client, response):
     # Looks like Humble Guard doesn't use the errors object.
     # It responds identically whether token is missing or wrong.
     if guard_required:
-        raise HumbleTwoFactorGuardException(error_msg, request=response.request, response=response,
+        raise HumbleTwoFactorGuardException("Humble Guard token required", request=response.request, response=response,
                                        captcha_required=captcha_required, authy_required=authy_required,
                                        guard_required=guard_required)
 
