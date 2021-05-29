@@ -61,8 +61,7 @@ def login_handler(client, response):
 
     data = parse_data(response)
 
-    success = data.get('success', None)
-    if success is True:
+    if response.status_code == 200:
         return True
 
     captcha_required = data.get('captcha_required')
