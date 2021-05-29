@@ -18,7 +18,7 @@ from humblebundle.exceptions import *
 import humblebundle.handlers as handlers
 
 
-LOGIN_URL = 'https://www.humblebundle.com/login'
+LOGIN_URL = 'https://www.humblebundle.com/processlogin'
 ORDER_LIST_URL = 'https://www.humblebundle.com/api/v1/user/order'
 ORDER_URL = 'https://www.humblebundle.com/api/v1/order/{order_id}'
 CLAIMED_ENTITIES_URL = 'https://www.humblebundle.com/api/v1/user/claimed/entities'
