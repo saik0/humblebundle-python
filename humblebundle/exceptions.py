@@ -9,7 +9,8 @@ __copyright__ = "Copyright 2014, Joel Pedraza"
 __license__ = "MIT"
 
 __all__ = ['HumbleException', 'HumbleResponseException', 'HumbleAuthenticationException', 'HumbleCredentialException',
-           'HumbleCaptchaException', 'HumbleTwoFactorException', 'HumbleParseException']
+           'HumbleCaptchaException', 'HumbleTwoFactorException', 'HumbleTwoFactorAuthyException',
+           'HumbleTwoFactorGuardException', 'HumbleParseException']
 
 from requests import RequestException
 
@@ -38,6 +39,7 @@ class HumbleAuthenticationException(HumbleResponseException):
     def __init__(self, *args, **kwargs):
         self.captcha_required = kwargs.pop('captcha_required', None)
         self.authy_required = kwargs.pop('authy_required', None)
+        self.guard_required = kwargs.pop('guard_required', None)
         super(HumbleAuthenticationException, self).__init__(*args, **kwargs)
 
 
@@ -58,6 +60,20 @@ class HumbleCaptchaException(HumbleAuthenticationException):
 class HumbleTwoFactorException(HumbleAuthenticationException):
     """
     The one time password was invalid
+    """
+    pass
+
+
+class HumbleTwoFactorAuthyException(HumbleTwoFactorException):
+    """
+    The Authy token was invalid
+    """
+    pass
+
+
+class HumbleTwoFactorGuardException(HumbleTwoFactorException):
+    """
+    The Humble Guard token was invalid or missing
     """
     pass
 

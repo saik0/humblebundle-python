@@ -18,7 +18,8 @@ from humblebundle.exceptions import *
 import humblebundle.handlers as handlers
 
 
-LOGIN_URL = 'https://www.humblebundle.com/login'
+LOGIN_URL = 'https://www.humblebundle.com/processlogin'
+LOGOUT_URL = 'https://www.humblebundle.com/logout'
 ORDER_LIST_URL = 'https://www.humblebundle.com/api/v1/user/order'
 ORDER_URL = 'https://www.humblebundle.com/api/v1/order/{order_id}'
 CLAIMED_ENTITIES_URL = 'https://www.humblebundle.com/api/v1/user/claimed/entities'
@@ -76,7 +77,7 @@ class HumbleApi(object):
 
     @callback
     def login(self, username, password, authy_token=None, recaptcha_challenge=None, recaptcha_response=None,
-              *args, **kwargs):
+              guard_token=None, *args, **kwargs):
         """
         Login to the Humble Bundle API. The response sets the _simpleauth_sess cookie which is stored in the session
         automatically.
@@ -107,12 +108,23 @@ class HumbleApi(object):
             'username': username,
             'password': password,
             'authy-token': authy_token,
+            'guard': guard_token,
             'recaptcha_challenge_field': recaptcha_challenge,
             'recaptcha_response_field': recaptcha_response}
         kwargs.setdefault('data', {}).update({k: v for k, v in default_data.items() if v is not None})
 
         response = self._request('POST', LOGIN_URL, *args, **kwargs)
         return handlers.login_handler(self, response)
+
+
+    @callback
+    def logout(self, *args, **kwargs):
+        """
+        Logout of the Humble Bundle API.
+        """
+        self.logger.info("Logging out")
+        self._request('POST', LOGOUT_URL, *args, **kwargs)
+
 
     @callback
     def get_gamekeys(self, *args, **kwargs):
