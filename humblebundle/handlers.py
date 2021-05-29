@@ -66,26 +66,38 @@ def login_handler(client, response):
 
     captcha_required = data.get('captcha_required')
     authy_required = data.get('authy_required')
+    guard_required = data.get('humble_guard_required')
 
     errors, error_msg = get_errors(data)
     if errors:
         captcha = errors.get('captcha')
         if captcha:
             raise HumbleCaptchaException(error_msg, request=response.request, response=response,
-                                         captcha_required=captcha_required, authy_required=authy_required)
+                                         captcha_required=captcha_required, authy_required=authy_required,
+                                         guard_required=guard_required)
 
         username = errors.get('username')
         if username:
             raise HumbleCredentialException(error_msg, request=response.request, response=response,
-                                            captcha_required=captcha_required, authy_required=authy_required)
+                                            captcha_required=captcha_required, authy_required=authy_required,
+                                            guard_required=guard_required)
 
         authy_token = errors.get("authy-token")
         if authy_token:
-            raise HumbleTwoFactorException(error_msg, request=response.request, response=response,
-                                           captcha_required=captcha_required, authy_required=authy_required)
+            raise HumbleTwoFactorAuthyException(error_msg, request=response.request, response=response,
+                                           captcha_required=captcha_required, authy_required=authy_required,
+                                           guard_required=guard_required)
+
+    # Looks like Humble Guard doesn't use the errors object.
+    # It responds identically whether token is missing or wrong.
+    if guard_required:
+        raise HumbleTwoFactorGuardException(error_msg, request=response.request, response=response,
+                                       captcha_required=captcha_required, authy_required=authy_required,
+                                       guard_required=guard_required)
 
     raise HumbleAuthenticationException(error_msg, request=response.request, response=response,
-                                        captcha_required=captcha_required, authy_required=authy_required)
+                                        captcha_required=captcha_required, authy_required=authy_required,
+                                        guard_required=guard_required)
 
 
 def gamekeys_handler(client, response):
